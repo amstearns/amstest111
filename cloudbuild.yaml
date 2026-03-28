@@ -1,0 +1,27 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:v2'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:latest'
+      - '--platform'
+      - 'linux/amd64'
+      - '.'
+
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:v2'
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:latest'
+
+images:
+  - 'us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:v2'
+  - 'us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:latest'
