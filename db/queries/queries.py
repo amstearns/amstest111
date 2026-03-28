@@ -21,6 +21,7 @@ or lists of dicts — JSON-serializable for direct use in FastAPI responses.
 from __future__ import annotations
 
 from decimal import Decimal
+from datetime import datetime, date
 from typing import Any, Optional
 from uuid import UUID
 
@@ -56,6 +57,10 @@ def _model_to_dict(obj: Any, exclude: Optional[set] = None) -> dict:
             val = float(val)
         elif isinstance(val, UUID):
             val = str(val)
+        elif isinstance(val, datetime):
+            val = val.isoformat()
+        elif isinstance(val, date):
+            val = val.isoformat()
         result[col.name] = val
     return result
 
