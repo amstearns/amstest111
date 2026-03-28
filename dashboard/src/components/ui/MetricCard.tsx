@@ -10,6 +10,8 @@ interface MetricCardProps {
 export function MetricCard({ metric, className = "" }: MetricCardProps) {
   const trendIcon =
     metric.trend === "up" ? "↑" : metric.trend === "down" ? "↓" : "→";
+  const trendLabel =
+    metric.trend === "up" ? "up" : metric.trend === "down" ? "down" : "stable";
   const trendColor =
     metric.trend === "up"
       ? "text-emerald-400"
@@ -29,9 +31,12 @@ export function MetricCard({ metric, className = "" }: MetricCardProps) {
         <p className="text-xs text-slate-500 mb-2">{metric.unit}</p>
       )}
       {metric.change !== undefined && (
-        <div className={`flex items-center gap-1 text-xs font-medium ${trendColor}`}>
-          <span>{trendIcon}</span>
-          <span>
+        <div
+          className={`flex items-center gap-1 text-xs font-medium ${trendColor}`}
+          aria-label={`Trend: ${trendLabel} ${Math.abs(metric.change)}% ${metric.changeLabel ?? "change"}`}
+        >
+          <span aria-hidden="true">{trendIcon}</span>
+          <span aria-hidden="true">
             {Math.abs(metric.change)}%{" "}
             {metric.changeLabel ?? "change"}
           </span>

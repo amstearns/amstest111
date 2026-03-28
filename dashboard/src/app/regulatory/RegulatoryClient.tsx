@@ -87,9 +87,10 @@ function IncentiveCard({ incentive }: { incentive: RegulatoryIncentive }) {
         className="text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1"
         aria-expanded={expanded}
         aria-controls={`desc-${incentive.id}`}
+        aria-label={`${expanded ? "Hide" : "Show"} details for ${incentive.name}`}
       >
-        <span>{expanded ? "▲" : "▼"}</span>
-        <span>{expanded ? "Hide" : "Show"} details</span>
+        <span aria-hidden="true">{expanded ? "▲" : "▼"}</span>
+        <span aria-hidden="true">{expanded ? "Hide" : "Show"} details</span>
       </button>
 
       {expanded && (

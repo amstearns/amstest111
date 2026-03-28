@@ -18,6 +18,12 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Focus indicator — WCAG 2.1 AA visible focus */
+:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
 /* Smooth scrollbar for dark theme */
 ::-webkit-scrollbar {
   width: 6px;

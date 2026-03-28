@@ -102,8 +102,11 @@ export function FinancialClient({ data }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ROI Calculator */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-5">
-            <h2 className="text-sm font-semibold text-white">ROI Calculator</h2>
+          <div
+            className="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-5"
+            aria-labelledby="roi-calculator-heading"
+          >
+            <h2 id="roi-calculator-heading" className="text-sm font-semibold text-white">ROI Calculator</h2>
 
             {/* Investment Slider */}
             <div>
@@ -194,7 +197,13 @@ export function FinancialClient({ data }: Props) {
             </div>
 
             {/* Results */}
-            <div className="border-t border-slate-700 pt-4 grid grid-cols-2 gap-3">
+            <div
+              className="border-t border-slate-700 pt-4 grid grid-cols-2 gap-3"
+              role="region"
+              aria-label="ROI calculation results"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {[
                 { label: "ROI", value: `${result.roi}%`, highlight: true },
                 { label: "Payback Period", value: `${result.paybackPeriod} yrs`, highlight: false },

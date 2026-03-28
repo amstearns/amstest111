@@ -92,10 +92,10 @@ export function BenchmarkingClient({ data }: Props) {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-4">
         <div>
-          <label htmlFor="size-filter" className="text-xs text-slate-400 block mb-1">
+          <p id="size-filter-label" className="text-xs text-slate-400 block mb-1">
             Filter by Firm Size
-          </label>
-          <div className="flex gap-1.5 flex-wrap" role="group" aria-label="Filter by firm size">
+          </p>
+          <div className="flex gap-1.5 flex-wrap" role="group" aria-labelledby="size-filter-label">
             {uniqueSizes.map((size) => (
               <button
                 key={size}
@@ -132,7 +132,12 @@ export function BenchmarkingClient({ data }: Props) {
         </div>
 
         <div className="ml-auto">
-          <span className="text-xs text-slate-500">
+          <span
+            className="text-xs text-slate-500"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {filtered.length} of {data.caseStudies.length} case studies
           </span>
         </div>

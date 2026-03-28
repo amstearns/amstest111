@@ -55,12 +55,14 @@ export function Sidebar() {
   return (
     <aside
       className="w-64 min-h-screen bg-slate-900 border-r border-slate-800 flex flex-col"
-      aria-label="Main navigation"
     >
       {/* Logo / Brand */}
       <div className="p-6 border-b border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+          <div
+            className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center"
+            aria-hidden="true"
+          >
             <span className="text-white text-sm font-bold">RE</span>
           </div>
           <div>
@@ -73,7 +75,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4" aria-label="Dashboard sections">
+      <nav className="flex-1 p-4" aria-label="Main navigation">
         <ul className="space-y-1" role="list">
           {NAV_ITEMS.map((item) => {
             const isActive =
