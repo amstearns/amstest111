@@ -1,0 +1,1208 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Renewable Energy Executive Dashboard API",
+    "description": "FastAPI backend serving renewable energy research data for the executive dashboard. All data is derived from the March 2026 research phase covering the North American construction industry.\n\n**Research confidence levels:**\n- `HIGH` – multiple corroborating sources\n- `MEDIUM` – single reliable source or partial data\n- `LOW` – inference from related data or limited sourcing",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Technology Services Group",
+      "email": "tsg@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Health check",
+        "description": "Returns the current health status of the API and its database connection.",
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" },
+                "example": {
+                  "status": "ok",
+                  "version": "1.0.0",
+                  "timestamp": "2026-03-28T14:00:00Z",
+                  "database": "ok",
+                  "uptime_seconds": 3600.5
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service degraded or unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorDetail" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/market-trends": {
+      "get": {
+        "tags": ["Market Data"],
+        "summary": "Adoption rates and market size data",
+        "description": "Returns global and North American green building market size data, electric construction equipment market data, IRA incentive totals, adoption rates by firm size, time-series projections, and key market drivers and barriers.\n\n**Key data points:**\n- Global green building market: $618.58B (2025) → $1,374.23B (2034), CAGR 9.29%\n- North America: ~35% of global market ($153.87B in 2025)\n- Electric construction equipment: $13.63–15.77B (2025), projected $34.72B by 2030 (CAGR 20.5%)\n- Mid-size firms ($50M–$500M): 40–55% have adopted some renewable energy strategy",
+        "operationId": "get_market_trends",
+        "responses": {
+          "200": {
+            "description": "Market trends data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MarketTrendsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/regional-data": {
+      "get": {
+        "tags": ["Market Data"],
+        "summary": "North American regional breakdown",
+        "description": "Returns USGBC Top 10 States for LEED (2024 and 2025), country-level data for USA, Canada, and Mexico, and key state/provincial policy drivers.\n\n**Key data points:**\n- US: 56M gross sq meters LEED-certified space (global leader)\n- Canada: 10.07M sq meters, 2nd globally; Canada Green Buildings Strategy 2024\n- Mexico: 2.27M sq meters, 6th globally; first LEED v5 O+M and industrial certifications",
+        "operationId": "get_regional_data",
+        "responses": {
+          "200": {
+            "description": "Regional breakdown data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RegionalDataResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/technologies": {
+      "get": {
+        "tags": ["Technology"],
+        "summary": "Technology catalog with feasibility scores and ROI",
+        "description": "Returns all tracked renewable energy and green building technologies with feasibility scores (0–10), ROI metrics, payback estimates, and adoption data.\n\n**Technologies covered:**\n- Electric Construction Equipment (excavators, cranes, loaders)\n- Solar PV (on-site, BIPV)\n- Green Building Systems (HVAC, LED, stormwater)\n- Battery Storage (construction site and building-integrated)\n- Green Hydrogen\n- Mass Timber / CLT\n- AI Energy Management Systems",
+        "operationId": "get_technologies",
+        "responses": {
+          "200": {
+            "description": "Technology catalog",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TechnologiesResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/technology/{id}/comparison": {
+      "get": {
+        "tags": ["Technology"],
+        "summary": "TCO comparison vs. conventional",
+        "description": "Returns a full total cost of ownership (TCO) analysis comparing the specified renewable/green technology against its conventional equivalent, including multi-scenario analysis over 10–20 year horizons.\n\n**Technology IDs:**\n- `electric-excavator`\n- `solar-pv`\n- `green-building-systems`\n- `battery-storage`\n- `green-hydrogen`\n- `mass-timber`\n- `ai-energy-management`",
+        "operationId": "get_technology_comparison",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "URL-safe technology identifier",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "electric-excavator",
+                "solar-pv",
+                "green-building-systems",
+                "battery-storage",
+                "green-hydrogen",
+                "mass-timber",
+                "ai-energy-management"
+              ],
+              "example": "solar-pv"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "TCO comparison data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TechnologyComparisonResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Technology not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorDetail" },
+                "example": {
+                  "detail": "Technology with id 'unknown-tech' not found.",
+                  "code": "TECHNOLOGY_NOT_FOUND"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/payback-analysis": {
+      "get": {
+        "tags": ["Financial"],
+        "summary": "Payback periods by technology",
+        "description": "Returns payback period analysis for all tracked technologies, with and without regulatory incentives.\n\n**Key data points:**\n- Range: 5–12 years depending on technology and incentive availability\n- Solar PV: 7–12 years base; 5–8 years with IRA credits\n- Electric equipment: 6–10 years base; 4–7 years with IRA credits\n- LEED management software: 3–6 months",
+        "operationId": "get_payback_analysis",
+        "responses": {
+          "200": {
+            "description": "Payback analysis data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaybackAnalysisResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/roi-scenarios": {
+      "get": {
+        "tags": ["Financial"],
+        "summary": "Conservative / moderate / aggressive ROI projections",
+        "description": "Returns three multi-year ROI projection scenarios for a representative mid-size construction firm ($150M revenue) adopting a portfolio of green technologies over a 10-year horizon.\n\n**Scenarios:**\n- **Conservative**: Minimum viable adoption (LEED AP credentialing + management software); no major capex\n- **Moderate**: Full sustainability program with on-site solar demonstration and electric equipment pilot\n- **Aggressive**: Comprehensive transformation including mass timber capability, full fleet electrification, and SBTi commitment",
+        "operationId": "get_roi_scenarios",
+        "responses": {
+          "200": {
+            "description": "ROI scenarios",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ROIScenariosResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/incentives": {
+      "get": {
+        "tags": ["Financial"],
+        "summary": "Regulatory incentives and their financial impact",
+        "description": "Returns all tracked federal, state, and provincial incentive programs relevant to green building and renewable energy adoption in construction.\n\n**Key programs:**\n- IRA Section 48 Investment Tax Credit (30%+ for solar, storage)\n- IRA Section 45 Production Tax Credit\n- Section 179D Energy-Efficient Commercial Buildings Deduction (expanded by IRA)\n- Federal LEED Gold mandate (GSA – market access, not financial)\n- State programs: CA, NY, CO, MA, WA, IL\n- Canada: Greener Homes Initiative, Clean Investment Tax Credit\n\n**Note:** Political risk flagged where OBBBA may modify credits.",
+        "operationId": "get_incentives",
+        "responses": {
+          "200": {
+            "description": "Incentives data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IncentivesResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/case-studies": {
+      "get": {
+        "tags": ["Competitive"],
+        "summary": "Benchmarking case studies",
+        "description": "Returns competitive benchmarking profiles for six leading construction firms that have implemented renewable energy and sustainability strategies, with ROI metrics and lessons applicable to mid-size firms.\n\n**Firms profiled:**\n- **Mortenson** (Minneapolis) – $5.5B; #1 ENR Battery Storage; 40 GW wind, 12+ GW solar\n- **Gilbane** (Providence) – $7.3B; #7 ENR Green 2024; regenerative construction; SBTi Net Zero 2040\n- **Suffolk** (Boston) – $5B+; $2.6B annual green revenue; 43M+ SF decarbonization\n- **Swinerton** (San Francisco) – $4.5B; Timberlab mass timber; 200 MW solar\n- **Hensel Phelps** (Greeley) – $7.4B; $192M net-zero microgrid; $1M+ LEED savings\n- **Brasfield & Gorrie** (Birmingham) – $6.5B; #1 ENR Texas & Southeast; LEED upselling",
+        "operationId": "get_case_studies",
+        "responses": {
+          "200": {
+            "description": "Case studies data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CaseStudiesResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/green-contracts": {
+      "get": {
+        "tags": ["Competitive"],
+        "summary": "Contract win rate correlation data",
+        "description": "Returns data on the correlation between green credentials/certifications and contract win rates, including certification market data, bid win rate evidence, contract premiums, and client preference analysis.\n\n**Key data points:**\n- LEED referenced in 71% of specs for projects >$50M\n- 35+ US states mandate LEED or equivalent for public buildings\n- GSA requires LEED Gold for new federal buildings\n- Sustainability criteria worth 10–25% of evaluation points in government RFPs\n- LEED O+M certifications grew 79% (2019–2024)\n- Green-certified firms effectively excluded from majority of large-project bids without credentials\n- 25–35% higher contract win rates on green-specified projects",
+        "operationId": "get_green_contracts",
+        "responses": {
+          "200": {
+            "description": "Green contract correlation data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GreenContractsResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "required": ["status", "version", "timestamp", "database"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Service status",
+            "example": "ok"
+          },
+          "version": {
+            "type": "string",
+            "description": "API version string",
+            "example": "1.0.0"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Current server UTC timestamp (ISO 8601)",
+            "example": "2026-03-28T14:00:00Z"
+          },
+          "database": {
+            "type": "string",
+            "description": "Database connection status",
+            "enum": ["ok", "degraded", "down"],
+            "example": "ok"
+          },
+          "uptime_seconds": {
+            "type": "number",
+            "nullable": true,
+            "description": "Process uptime in seconds",
+            "example": 3600.5
+          }
+        }
+      },
+
+      "ErrorDetail": {
+        "type": "object",
+        "required": ["detail"],
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "description": "Machine-readable error code"
+          },
+          "field": {
+            "type": "string",
+            "nullable": true,
+            "description": "Field name if this is a validation error"
+          }
+        }
+      },
+
+      "ConfidenceLevel": {
+        "type": "string",
+        "enum": ["HIGH", "MEDIUM", "LOW"],
+        "description": "Research data confidence level based on source quality and corroboration"
+      },
+
+      "Region": {
+        "type": "string",
+        "enum": ["US", "Canada", "Mexico", "North America"]
+      },
+
+      "TechnologyCategory": {
+        "type": "string",
+        "enum": [
+          "Electric Equipment",
+          "Solar PV",
+          "Green Building Systems",
+          "Battery Storage",
+          "Green Hydrogen",
+          "Mass Timber",
+          "Energy Management"
+        ]
+      },
+
+      "ProjectionScenario": {
+        "type": "string",
+        "enum": ["conservative", "moderate", "aggressive"]
+      },
+
+      "FirmSize": {
+        "type": "string",
+        "enum": [
+          "Small (<$50M)",
+          "Mid-Size ($50M-$500M)",
+          "Large (>$500M)"
+        ]
+      },
+
+      "CertificationStandard": {
+        "type": "string",
+        "enum": [
+          "LEED",
+          "WELL",
+          "Living Building Challenge",
+          "Green Globes",
+          "ENERGY STAR",
+          "Passive House",
+          "ISO 14001",
+          "BREEAM",
+          "Envision"
+        ]
+      },
+
+      "SourceCitation": {
+        "type": "object",
+        "required": ["name", "organization", "confidence"],
+        "properties": {
+          "name": { "type": "string", "example": "Precedence Research — Green Building Materials Market" },
+          "organization": { "type": "string", "example": "Precedence Research" },
+          "url": { "type": "string", "nullable": true, "format": "uri" },
+          "published_date": { "type": "string", "nullable": true, "example": "2026-02" },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "TimeSeriesPoint": {
+        "type": "object",
+        "required": ["year", "value", "unit"],
+        "properties": {
+          "year": { "type": "integer", "minimum": 2000, "maximum": 2040 },
+          "value": { "type": "number" },
+          "unit": { "type": "string", "example": "USD billions" },
+          "estimated": { "type": "boolean", "default": false },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "KeyMetric": {
+        "type": "object",
+        "required": ["label", "value", "unit"],
+        "properties": {
+          "label": { "type": "string" },
+          "value": { "type": "number" },
+          "unit": { "type": "string" },
+          "description": { "type": "string", "nullable": true }
+        }
+      },
+
+      "AdoptionRateByFirmSize": {
+        "type": "object",
+        "required": [
+          "firm_size",
+          "formal_esg_program_pct_min",
+          "formal_esg_program_pct_max",
+          "leed_experience_pct_min",
+          "leed_experience_pct_max",
+          "electric_equipment_fleet_pct_min",
+          "electric_equipment_fleet_pct_max",
+          "has_dedicated_sustainability_team",
+          "on_site_solar_deployed",
+          "confidence"
+        ],
+        "properties": {
+          "firm_size": { "$ref": "#/components/schemas/FirmSize" },
+          "formal_esg_program_pct_min": { "type": "number", "minimum": 0, "maximum": 100, "example": 40 },
+          "formal_esg_program_pct_max": { "type": "number", "minimum": 0, "maximum": 100, "example": 55 },
+          "leed_experience_pct_min": { "type": "number", "minimum": 0, "maximum": 100, "example": 35 },
+          "leed_experience_pct_max": { "type": "number", "minimum": 0, "maximum": 100, "example": 50 },
+          "electric_equipment_fleet_pct_min": { "type": "number", "minimum": 0, "maximum": 100, "example": 1 },
+          "electric_equipment_fleet_pct_max": { "type": "number", "minimum": 0, "maximum": 100, "example": 3 },
+          "has_dedicated_sustainability_team": { "type": "string", "example": "Emerging" },
+          "on_site_solar_deployed": { "type": "string", "example": "Occasional" },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "MarketSizeSnapshot": {
+        "type": "object",
+        "required": ["market_name", "value_usd_billions", "year", "source", "confidence"],
+        "properties": {
+          "market_name": { "type": "string" },
+          "value_usd_billions": { "type": "number" },
+          "year": { "type": "integer" },
+          "is_projection": { "type": "boolean", "default": false },
+          "cagr_pct": { "type": "number", "nullable": true },
+          "cagr_period": { "type": "string", "nullable": true },
+          "source": { "type": "string" },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "MarketDriverOrBarrier": {
+        "type": "object",
+        "required": ["name", "description", "severity", "trend", "confidence"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": { "type": "string", "enum": ["High", "Medium", "Low"] },
+          "trend": { "type": "string", "enum": ["Increasing", "Stable", "Declining", "Mixed"] },
+          "impact_on_mid_size_firms": { "type": "string", "nullable": true },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "MarketTrendsResponse": {
+        "type": "object",
+        "required": [
+          "as_of_date",
+          "global_green_building_market_2025_usd_b",
+          "global_green_building_market_2034_projected_usd_b",
+          "global_green_building_cagr_pct",
+          "north_america_market_share_pct",
+          "north_america_market_2025_usd_b",
+          "electric_equipment_market_2025_usd_b_min",
+          "electric_equipment_market_2025_usd_b_max",
+          "electric_equipment_market_2030_projected_usd_b",
+          "electric_equipment_cagr_pct",
+          "ira_clean_energy_incentives_usd_b",
+          "commercial_solar_adoption_boost_post_ira_pct",
+          "buildings_global_co2_share_pct",
+          "key_metrics",
+          "adoption_by_firm_size",
+          "global_market_time_series",
+          "electric_equipment_time_series",
+          "drivers",
+          "barriers",
+          "sources"
+        ],
+        "properties": {
+          "as_of_date": { "type": "string", "example": "2026-03-28" },
+          "global_green_building_market_2025_usd_b": { "type": "number", "example": 618.58 },
+          "global_green_building_market_2034_projected_usd_b": { "type": "number", "example": 1374.23 },
+          "global_green_building_cagr_pct": { "type": "number", "example": 9.29 },
+          "north_america_market_share_pct": { "type": "number", "example": 35.0 },
+          "north_america_market_2025_usd_b": { "type": "number", "example": 153.87 },
+          "electric_equipment_market_2025_usd_b_min": { "type": "number", "example": 13.63 },
+          "electric_equipment_market_2025_usd_b_max": { "type": "number", "example": 15.77 },
+          "electric_equipment_market_2030_projected_usd_b": { "type": "number", "example": 34.72 },
+          "electric_equipment_cagr_pct": { "type": "number", "example": 20.5 },
+          "ira_clean_energy_incentives_usd_b": { "type": "number", "example": 270.0 },
+          "commercial_solar_adoption_boost_post_ira_pct": { "type": "number", "example": 12.0 },
+          "buildings_global_co2_share_pct": { "type": "number", "example": 37.0 },
+          "key_metrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/KeyMetric" }
+          },
+          "adoption_by_firm_size": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdoptionRateByFirmSize" }
+          },
+          "global_market_time_series": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TimeSeriesPoint" }
+          },
+          "electric_equipment_time_series": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TimeSeriesPoint" }
+          },
+          "drivers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MarketDriverOrBarrier" }
+          },
+          "barriers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MarketDriverOrBarrier" }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "StateRegionalData": {
+        "type": "object",
+        "required": ["state"],
+        "properties": {
+          "state": { "type": "string", "example": "Massachusetts" },
+          "leed_rank_2025": { "type": "integer", "nullable": true, "minimum": 1, "example": 1 },
+          "leed_rank_2024": { "type": "integer", "nullable": true, "minimum": 1, "example": 1 },
+          "rank_change_yoy": { "type": "integer", "nullable": true, "example": 0 },
+          "key_drivers": { "type": "array", "items": { "type": "string" } },
+          "key_policies": { "type": "array", "items": { "type": "string" } },
+          "leed_credential_holders": { "type": "integer", "nullable": true, "example": 6920 },
+          "notable_projects": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+
+      "CountryRegionalData": {
+        "type": "object",
+        "required": ["country", "leed_certified_space_sq_meters_m", "confidence"],
+        "properties": {
+          "country": { "$ref": "#/components/schemas/Region" },
+          "leed_certified_space_sq_meters_m": { "type": "number", "example": 56.0 },
+          "leed_certified_projects": { "type": "integer", "nullable": true },
+          "global_leed_rank": { "type": "integer", "nullable": true },
+          "market_size_2025_usd_b": { "type": "number", "nullable": true },
+          "market_cagr_pct": { "type": "number", "nullable": true },
+          "key_strategies": { "type": "array", "items": { "type": "string" } },
+          "leading_provinces_or_states": { "type": "array", "items": { "type": "string" } },
+          "key_drivers": { "type": "array", "items": { "type": "string" } },
+          "key_challenges": { "type": "array", "items": { "type": "string" } },
+          "notable_milestones": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "RegionalDataResponse": {
+        "type": "object",
+        "required": ["as_of_date", "top_us_states_2025", "country_data", "sources"],
+        "properties": {
+          "as_of_date": { "type": "string", "example": "2026-03-28" },
+          "top_us_states_2025": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/StateRegionalData" }
+          },
+          "country_data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CountryRegionalData" }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "FeasibilityScore": {
+        "type": "object",
+        "required": [
+          "overall_score",
+          "technical_maturity",
+          "financial_viability",
+          "regulatory_support",
+          "workforce_readiness",
+          "supply_chain_maturity",
+          "mid_size_adoption_ease"
+        ],
+        "properties": {
+          "overall_score": { "type": "number", "minimum": 0, "maximum": 10, "example": 7.5 },
+          "technical_maturity": { "type": "number", "minimum": 0, "maximum": 10 },
+          "financial_viability": { "type": "number", "minimum": 0, "maximum": 10 },
+          "regulatory_support": { "type": "number", "minimum": 0, "maximum": 10 },
+          "workforce_readiness": { "type": "number", "minimum": 0, "maximum": 10 },
+          "supply_chain_maturity": { "type": "number", "minimum": 0, "maximum": 10 },
+          "mid_size_adoption_ease": { "type": "number", "minimum": 0, "maximum": 10 }
+        }
+      },
+
+      "TechnologyROIMetric": {
+        "type": "object",
+        "properties": {
+          "payback_years_min": { "type": "number", "nullable": true },
+          "payback_years_max": { "type": "number", "nullable": true },
+          "payback_years_typical": { "type": "number", "nullable": true },
+          "npv_20yr_usd_k_per_unit": { "type": "number", "nullable": true },
+          "irr_pct": { "type": "number", "nullable": true },
+          "annual_savings_usd_k": { "type": "number", "nullable": true },
+          "upfront_cost_premium_pct": { "type": "number", "nullable": true },
+          "operating_cost_reduction_pct": { "type": "number", "nullable": true }
+        }
+      },
+
+      "Technology": {
+        "type": "object",
+        "required": ["id", "name", "category", "description", "feasibility", "roi", "confidence"],
+        "properties": {
+          "id": { "type": "string", "example": "solar-pv" },
+          "name": { "type": "string", "example": "On-Site Solar PV" },
+          "category": { "$ref": "#/components/schemas/TechnologyCategory" },
+          "description": { "type": "string" },
+          "market_size_2025_usd_b": { "type": "number", "nullable": true },
+          "market_size_2030_projected_usd_b": { "type": "number", "nullable": true },
+          "market_cagr_pct": { "type": "number", "nullable": true },
+          "market_cagr_period": { "type": "string", "nullable": true },
+          "north_america_market_share_pct": { "type": "number", "nullable": true },
+          "feasibility": { "$ref": "#/components/schemas/FeasibilityScore" },
+          "roi": { "$ref": "#/components/schemas/TechnologyROIMetric" },
+          "key_benefits": { "type": "array", "items": { "type": "string" } },
+          "key_barriers": { "type": "array", "items": { "type": "string" } },
+          "leading_vendors": { "type": "array", "items": { "type": "string" } },
+          "applicable_firm_sizes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/FirmSize" }
+          },
+          "relevant_certifications": { "type": "array", "items": { "type": "string" } },
+          "energy_savings_pct": { "type": "number", "nullable": true },
+          "co2_reduction_pct": { "type": "number", "nullable": true },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" },
+          "sources": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+
+      "TechnologiesResponse": {
+        "type": "object",
+        "required": ["as_of_date", "technologies", "summary_adoption_rates", "sources"],
+        "properties": {
+          "as_of_date": { "type": "string" },
+          "technologies": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Technology" }
+          },
+          "summary_adoption_rates": {
+            "type": "object",
+            "additionalProperties": { "type": "number" },
+            "description": "Technology name → adoption rate (%) among ENR case-study cohort",
+            "example": {
+              "LEED Certification Management": 100.0,
+              "Solar PV Systems": 100.0,
+              "Battery Energy Storage": 67.0,
+              "Electric Construction Equipment": 33.0
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "TCOComponent": {
+        "type": "object",
+        "required": ["component", "green_cost_usd_k", "conventional_cost_usd_k", "difference_usd_k"],
+        "properties": {
+          "component": { "type": "string", "example": "Capital Expenditure" },
+          "green_cost_usd_k": { "type": "number" },
+          "conventional_cost_usd_k": { "type": "number" },
+          "difference_usd_k": { "type": "number" },
+          "notes": { "type": "string", "nullable": true }
+        }
+      },
+
+      "TCOScenario": {
+        "type": "object",
+        "required": [
+          "scenario_name",
+          "analysis_period_years",
+          "discount_rate_pct",
+          "green_total_tco_usd_k",
+          "conventional_total_tco_usd_k",
+          "green_advantage_usd_k",
+          "components"
+        ],
+        "properties": {
+          "scenario_name": { "type": "string" },
+          "analysis_period_years": { "type": "integer", "minimum": 1, "maximum": 30 },
+          "discount_rate_pct": { "type": "number" },
+          "green_total_tco_usd_k": { "type": "number" },
+          "conventional_total_tco_usd_k": { "type": "number" },
+          "green_advantage_usd_k": { "type": "number" },
+          "breakeven_year": { "type": "number", "nullable": true },
+          "components": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TCOComponent" }
+          },
+          "assumptions": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+
+      "TechnologyComparisonResponse": {
+        "type": "object",
+        "required": [
+          "technology_id",
+          "technology_name",
+          "conventional_equivalent",
+          "comparison_unit",
+          "tco_scenarios",
+          "key_financial_insights",
+          "incentives_included",
+          "data_confidence",
+          "sources"
+        ],
+        "properties": {
+          "technology_id": { "type": "string" },
+          "technology_name": { "type": "string" },
+          "conventional_equivalent": { "type": "string" },
+          "comparison_unit": { "type": "string" },
+          "tco_scenarios": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TCOScenario" }
+          },
+          "key_financial_insights": { "type": "array", "items": { "type": "string" } },
+          "incentives_included": { "type": "array", "items": { "type": "string" } },
+          "data_confidence": { "$ref": "#/components/schemas/ConfidenceLevel" },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "PaybackEntry": {
+        "type": "object",
+        "required": [
+          "technology_id",
+          "technology_name",
+          "category",
+          "payback_years_base",
+          "payback_years_with_incentives",
+          "payback_years_optimistic",
+          "payback_years_pessimistic",
+          "confidence"
+        ],
+        "properties": {
+          "technology_id": { "type": "string" },
+          "technology_name": { "type": "string" },
+          "category": { "$ref": "#/components/schemas/TechnologyCategory" },
+          "payback_years_base": { "type": "number", "minimum": 0 },
+          "payback_years_with_incentives": { "type": "number", "minimum": 0 },
+          "payback_years_optimistic": { "type": "number", "minimum": 0 },
+          "payback_years_pessimistic": { "type": "number", "minimum": 0 },
+          "primary_incentive_used": { "type": "string", "nullable": true },
+          "incentive_value_pct": { "type": "number", "nullable": true },
+          "typical_project_cost_usd_k_min": { "type": "number", "nullable": true },
+          "typical_project_cost_usd_k_max": { "type": "number", "nullable": true },
+          "annual_savings_usd_k": { "type": "number", "nullable": true },
+          "notes": { "type": "string", "nullable": true },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "PaybackAnalysisResponse": {
+        "type": "object",
+        "required": ["as_of_date", "analysis_assumptions", "payback_data", "summary_stats", "sources"],
+        "properties": {
+          "as_of_date": { "type": "string" },
+          "analysis_assumptions": { "type": "array", "items": { "type": "string" } },
+          "payback_data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PaybackEntry" }
+          },
+          "summary_stats": {
+            "type": "object",
+            "additionalProperties": { "type": "number" },
+            "description": "avg_payback_no_incentives, avg_payback_with_incentives, min_payback, max_payback"
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "AnnualROIProjection": {
+        "type": "object",
+        "required": ["year", "cumulative_investment_usd_k", "cumulative_savings_usd_k", "net_position_usd_k", "roi_pct"],
+        "properties": {
+          "year": { "type": "integer" },
+          "cumulative_investment_usd_k": { "type": "number" },
+          "cumulative_savings_usd_k": { "type": "number" },
+          "net_position_usd_k": { "type": "number" },
+          "roi_pct": { "type": "number" }
+        }
+      },
+
+      "ROIScenario": {
+        "type": "object",
+        "required": [
+          "scenario",
+          "label",
+          "description",
+          "technologies_included",
+          "initial_investment_usd_k",
+          "ten_year_roi_pct",
+          "ten_year_npv_usd_k",
+          "irr_pct",
+          "breakeven_year",
+          "annual_projections",
+          "key_assumptions",
+          "risk_factors"
+        ],
+        "properties": {
+          "scenario": { "$ref": "#/components/schemas/ProjectionScenario" },
+          "label": { "type": "string", "example": "Conservative Case" },
+          "description": { "type": "string" },
+          "technologies_included": { "type": "array", "items": { "type": "string" } },
+          "initial_investment_usd_k": { "type": "number" },
+          "ten_year_roi_pct": { "type": "number" },
+          "ten_year_npv_usd_k": { "type": "number" },
+          "irr_pct": { "type": "number" },
+          "breakeven_year": { "type": "number" },
+          "annual_projections": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AnnualROIProjection" }
+          },
+          "key_assumptions": { "type": "array", "items": { "type": "string" } },
+          "risk_factors": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+
+      "ROIScenariosResponse": {
+        "type": "object",
+        "required": ["as_of_date", "base_year", "representative_firm_profile", "discount_rate_pct", "scenarios", "sources"],
+        "properties": {
+          "as_of_date": { "type": "string" },
+          "base_year": { "type": "integer", "example": 2026 },
+          "representative_firm_profile": {
+            "type": "string",
+            "example": "Mid-size construction firm, $150M annual revenue, 250 employees, headquartered in US Midwest"
+          },
+          "discount_rate_pct": { "type": "number", "example": 8.0 },
+          "scenarios": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ROIScenario" }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "Incentive": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "program",
+          "jurisdiction",
+          "incentive_type",
+          "applicable_technologies",
+          "value_description",
+          "eligible_firm_sizes",
+          "prevailing_wage_required",
+          "domestic_content_bonus_available",
+          "financial_impact_description",
+          "status",
+          "confidence",
+          "source"
+        ],
+        "properties": {
+          "id": { "type": "string", "example": "ira-section-48" },
+          "name": { "type": "string", "example": "Investment Tax Credit (ITC) — Section 48" },
+          "program": { "type": "string", "example": "Inflation Reduction Act (2022)" },
+          "jurisdiction": { "type": "string", "example": "Federal" },
+          "incentive_type": {
+            "type": "string",
+            "enum": ["Tax Credit", "Tax Deduction", "Grant", "Rebate", "Loan", "Mandate", "Rate Incentive"]
+          },
+          "applicable_technologies": { "type": "array", "items": { "type": "string" } },
+          "value_description": { "type": "string", "example": "30% base ITC; up to 40–50% with bonuses" },
+          "value_pct": { "type": "number", "nullable": true, "minimum": 0, "maximum": 100 },
+          "value_usd_k_max": { "type": "number", "nullable": true },
+          "total_program_budget_usd_b": { "type": "number", "nullable": true },
+          "eligible_firm_sizes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/FirmSize" }
+          },
+          "prevailing_wage_required": { "type": "boolean" },
+          "domestic_content_bonus_available": { "type": "boolean" },
+          "expiration_year": { "type": "integer", "nullable": true },
+          "political_risk": { "type": "string", "nullable": true },
+          "financial_impact_description": { "type": "string" },
+          "payback_reduction_years": { "type": "number", "nullable": true },
+          "status": {
+            "type": "string",
+            "enum": ["Active", "Modified", "At Risk", "Expired"]
+          },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" },
+          "source": { "type": "string" }
+        }
+      },
+
+      "IncentivesResponse": {
+        "type": "object",
+        "required": ["as_of_date", "total_ira_budget_usd_b", "total_incentives_listed", "incentives", "political_risk_summary", "sources"],
+        "properties": {
+          "as_of_date": { "type": "string" },
+          "total_ira_budget_usd_b": { "type": "number", "example": 270.0 },
+          "total_incentives_listed": { "type": "integer" },
+          "incentives": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Incentive" }
+          },
+          "political_risk_summary": { "type": "string" },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "CaseStudyROIMetric": {
+        "type": "object",
+        "required": ["metric_name", "value", "confidence"],
+        "properties": {
+          "metric_name": { "type": "string" },
+          "value": { "type": "string" },
+          "value_numeric": { "type": "number", "nullable": true },
+          "unit": { "type": "string", "nullable": true },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" },
+          "notes": { "type": "string", "nullable": true }
+        }
+      },
+
+      "TechnologyAdoptionItem": {
+        "type": "object",
+        "required": ["technology", "adoption_level"],
+        "properties": {
+          "technology": { "type": "string" },
+          "adoption_level": {
+            "type": "string",
+            "enum": ["Pilot", "Partial", "Full", "Leading"]
+          },
+          "notes": { "type": "string", "nullable": true }
+        }
+      },
+
+      "CaseStudy": {
+        "type": "object",
+        "required": [
+          "id",
+          "company_name",
+          "headquarters",
+          "annual_revenue_usd_b",
+          "employees",
+          "specializations",
+          "sustainability_start_year",
+          "primary_strategy",
+          "sbti_committed",
+          "has_dedicated_sustainability_team",
+          "key_differentiator",
+          "technologies_adopted",
+          "roi_metrics",
+          "key_lessons",
+          "applicable_to_mid_size",
+          "confidence",
+          "sources"
+        ],
+        "properties": {
+          "id": { "type": "string", "example": "mortenson" },
+          "company_name": { "type": "string" },
+          "headquarters": { "type": "string" },
+          "annual_revenue_usd_b": { "type": "number" },
+          "employees": { "type": "integer" },
+          "specializations": { "type": "array", "items": { "type": "string" } },
+          "enr_green_rank": { "type": "string", "nullable": true },
+          "sustainability_start_year": { "type": "integer" },
+          "primary_strategy": { "type": "string" },
+          "net_zero_target_year": { "type": "integer", "nullable": true },
+          "sbti_committed": { "type": "boolean" },
+          "has_dedicated_sustainability_team": { "type": "boolean" },
+          "key_differentiator": { "type": "string" },
+          "technologies_adopted": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TechnologyAdoptionItem" }
+          },
+          "roi_metrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CaseStudyROIMetric" }
+          },
+          "key_lessons": { "type": "array", "items": { "type": "string" } },
+          "applicable_to_mid_size": { "type": "boolean" },
+          "replication_investment_min_usd_k": { "type": "number", "nullable": true },
+          "replication_investment_max_usd_k": { "type": "number", "nullable": true },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" },
+          "sources": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+
+      "InvestmentPriorityItem": {
+        "type": "object",
+        "required": ["priority", "investment", "annual_cost_usd_k_min", "annual_cost_usd_k_max", "roi_timeline_description", "confidence"],
+        "properties": {
+          "priority": { "type": "integer", "minimum": 1 },
+          "investment": { "type": "string" },
+          "annual_cost_usd_k_min": { "type": "number" },
+          "annual_cost_usd_k_max": { "type": "number" },
+          "roi_timeline_description": { "type": "string" },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "TechnologyAdoptionSummary": {
+        "type": "object",
+        "required": ["technology", "firms_using", "total_firms", "adoption_rate_pct"],
+        "properties": {
+          "technology": { "type": "string" },
+          "firms_using": { "type": "integer" },
+          "total_firms": { "type": "integer" },
+          "adoption_rate_pct": { "type": "number" }
+        }
+      },
+
+      "CaseStudiesResponse": {
+        "type": "object",
+        "required": ["as_of_date", "total_firms_profiled", "case_studies", "technology_adoption_summary", "investment_priority_matrix", "sources"],
+        "properties": {
+          "as_of_date": { "type": "string" },
+          "total_firms_profiled": { "type": "integer", "example": 6 },
+          "case_studies": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CaseStudy" }
+          },
+          "technology_adoption_summary": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TechnologyAdoptionSummary" }
+          },
+          "investment_priority_matrix": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/InvestmentPriorityItem" }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      },
+
+      "BidWinRateDataPoint": {
+        "type": "object",
+        "required": ["credential_level", "project_segment", "notes", "confidence"],
+        "properties": {
+          "credential_level": { "type": "string" },
+          "win_rate_multiplier": { "type": "number", "nullable": true },
+          "project_segment": { "type": "string" },
+          "inclusion_in_bid_pool_pct": { "type": "number", "nullable": true, "minimum": 0, "maximum": 100 },
+          "notes": { "type": "string" },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" }
+        }
+      },
+
+      "ContractPremiumData": {
+        "type": "object",
+        "required": ["category", "metric", "value", "context", "confidence", "source"],
+        "properties": {
+          "category": { "type": "string" },
+          "metric": { "type": "string" },
+          "value": { "type": "string" },
+          "value_numeric": { "type": "number", "nullable": true },
+          "unit": { "type": "string", "nullable": true },
+          "context": { "type": "string" },
+          "confidence": { "$ref": "#/components/schemas/ConfidenceLevel" },
+          "source": { "type": "string" }
+        }
+      },
+
+      "CertificationMarketData": {
+        "type": "object",
+        "required": ["certification", "na_adoption_scale", "federal_acceptance", "key_benefit", "recommended_for_mid_size"],
+        "properties": {
+          "certification": { "$ref": "#/components/schemas/CertificationStandard" },
+          "global_projects": { "type": "integer", "nullable": true },
+          "na_adoption_scale": { "type": "string" },
+          "typical_cost_min_usd_k": { "type": "number", "nullable": true },
+          "typical_cost_max_usd_k": { "type": "number", "nullable": true },
+          "federal_acceptance": { "type": "boolean" },
+          "leed_spec_prevalence_pct": { "type": "number", "nullable": true },
+          "credential_holders_worldwide": { "type": "integer", "nullable": true },
+          "key_benefit": { "type": "string" },
+          "recommended_for_mid_size": { "type": "boolean" }
+        }
+      },
+
+      "GreenContractWinFactors": {
+        "type": "object",
+        "required": ["factor", "description", "importance", "mid_size_applicability"],
+        "properties": {
+          "factor": { "type": "string" },
+          "description": { "type": "string" },
+          "importance": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "mid_size_applicability": { "type": "string" }
+        }
+      },
+
+      "GreenContractsResponse": {
+        "type": "object",
+        "required": [
+          "as_of_date",
+          "leed_spec_prevalence_pct",
+          "states_with_leed_mandates",
+          "federal_leed_requirement",
+          "green_certified_office_share_pct",
+          "bid_win_rate_data",
+          "contract_premiums",
+          "certification_landscape",
+          "win_factors",
+          "total_leed_credential_holders",
+          "leed_ap_holders",
+          "leed_om_growth_pct",
+          "client_preference_summary",
+          "sources"
+        ],
+        "properties": {
+          "as_of_date": { "type": "string" },
+          "leed_spec_prevalence_pct": { "type": "number", "example": 71.0 },
+          "states_with_leed_mandates": { "type": "integer", "example": 35 },
+          "federal_leed_requirement": { "type": "string", "example": "LEED Gold for all new federal buildings and major renovations" },
+          "green_certified_office_share_pct": { "type": "number", "example": 42.2 },
+          "bid_win_rate_data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/BidWinRateDataPoint" }
+          },
+          "contract_premiums": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ContractPremiumData" }
+          },
+          "certification_landscape": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CertificationMarketData" }
+          },
+          "win_factors": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/GreenContractWinFactors" }
+          },
+          "total_leed_credential_holders": { "type": "integer", "example": 205000 },
+          "leed_ap_holders": { "type": "integer", "example": 129000 },
+          "leed_om_growth_pct": { "type": "number", "example": 79.0 },
+          "client_preference_summary": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "example": {
+              "Federal Government": "LEED Gold required (GSA mandate since 2010)",
+              "State/Municipal": "LEED or equivalent required in 35+ states; 10–25% of RFP evaluation points",
+              "Healthcare": "Growing sustainability requirements in contractor prequalification",
+              "Higher Education": "LEED Silver or Gold as baseline for campus construction",
+              "Corporate ESG": "LEED Gold/Platinum for headquarters; ESG reporting drives demand"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SourceCitation" }
+          }
+        }
+      }
+    }
+  },
+
+  "tags": [
+    {
+      "name": "System",
+      "description": "Health and system status endpoints"
+    },
+    {
+      "name": "Market Data",
+      "description": "Global and regional market size, adoption rates, drivers, and barriers"
+    },
+    {
+      "name": "Technology",
+      "description": "Technology catalog, feasibility scores, ROI, and TCO comparisons"
+    },
+    {
+      "name": "Financial",
+      "description": "Payback analysis, ROI scenarios, and regulatory incentives"
+    },
+    {
+      "name": "Competitive",
+      "description": "Benchmarking case studies and green contract win rate data"
+    }
+  ]
+}
