@@ -1,31 +1,40 @@
 {
   "status": "success",
-  "primary_url": "https://axiom-a0d989a8e117-575208803839.us-central1.run.app",
+  "primary_url": "https://axiom-a0d989a8e117-mlspa2xi3q-uc.a.run.app",
   "deployment_info": {
-    "timestamp": "2026-03-28T17:51:34Z",
+    "timestamp": "2026-03-28T17:56:10Z",
     "project_id": "amstearns-a47f",
-    "region": "us-central1"
+    "region": "us-central1",
+    "deployed_revision": "axiom-a0d989a8e117-00006-lnk"
   },
   "services": {
     "axiom-a0d989a8e117": {
       "name": "axiom-a0d989a8e117",
-      "url": "https://axiom-a0d989a8e117-575208803839.us-central1.run.app",
+      "url": "https://axiom-a0d989a8e117-mlspa2xi3q-uc.a.run.app",
       "status": "healthy",
       "health_checked": true,
       "health_endpoint": "/health",
+      "health_response": {
+        "status": "ok",
+        "timestamp": "2026-03-28T17:56:03.537Z"
+      },
       "platform": "Cloud Run",
       "image": "us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps/axiom-backend:latest",
+      "image_digest": "sha256:fd166e665a68d936774423eb18c62526be2cbc9394932d3341fc41669ef38dcf",
       "authentication": "required",
       "port": 8000,
       "memory": "512Mi",
-      "cpu": "1",
-      "timeout": 3600
+      "cpu": "2",
+      "timeout": 60,
+      "max_instances": 10
     }
   },
   "deployment_details": {
     "repository": "https://github.com/amstearns/amstest111",
     "branch": "main",
     "docker_registry": "us-central1-docker.pkg.dev/amstearns-a47f/axiom-apps",
-    "deployment_method": "gcloud run deploy"
+    "deployment_method": "gcloud run deploy",
+    "allow_unauthenticated": false,
+    "access_control": "no-allow-unauthenticated"
   }
 }
