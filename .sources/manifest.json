@@ -1,0 +1,246 @@
+{
+  "phase_execution_id": "1a88d447-7c28-42b2-b391-60e1b4bdaf8c",
+  "downloaded": [
+    {
+      "name": "sources.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_sources.md",
+      "size": 47392,
+      "source_type": "artifact"
+    },
+    {
+      "name": "market-analysis.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_market-analysis.md",
+      "size": 44519,
+      "source_type": "artifact"
+    },
+    {
+      "name": "green-contract-correlation.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_green-contract-correlation.md",
+      "size": 38454,
+      "source_type": "artifact"
+    },
+    {
+      "name": "competitive-benchmarking.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_competitive-benchmarking.md",
+      "size": 53326,
+      "source_type": "artifact"
+    },
+    {
+      "name": "opencode-session.json",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_opencode-session.json",
+      "size": 301213,
+      "source_type": "artifact"
+    },
+    {
+      "name": "source-evaluation.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_source-evaluation.md",
+      "size": 47392,
+      "source_type": "artifact"
+    },
+    {
+      "name": "research-report.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_research-report.md",
+      "size": 38375,
+      "source_type": "artifact"
+    },
+    {
+      "name": "market-analysis-data.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_market-analysis-data.md",
+      "size": 44519,
+      "source_type": "artifact"
+    },
+    {
+      "name": "green-contract-correlation.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_green-contract-correlation_1.md",
+      "size": 38454,
+      "source_type": "artifact"
+    },
+    {
+      "name": "competitive-benchmarking.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_competitive-benchmarking_1.md",
+      "size": 53326,
+      "source_type": "artifact"
+    },
+    {
+      "name": "README.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_README.md",
+      "size": 2197,
+      "source_type": "artifact"
+    },
+    {
+      "name": "market-research-findings.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_market-research-findings.md",
+      "size": 4160,
+      "source_type": "artifact"
+    },
+    {
+      "name": "green-contract-data.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_green-contract-data.md",
+      "size": 10196,
+      "source_type": "artifact"
+    },
+    {
+      "name": "case-study-data.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_case-study-data.md",
+      "size": 15955,
+      "source_type": "artifact"
+    },
+    {
+      "name": "opencode-session.json",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_opencode-session_1.json",
+      "size": 128194,
+      "source_type": "artifact"
+    },
+    {
+      "name": "README.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_README_1.md",
+      "size": 6465,
+      "source_type": "artifact"
+    },
+    {
+      "name": "03-green-contract-analysis.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_03-green-contract-analysis.md",
+      "size": 19740,
+      "source_type": "artifact"
+    },
+    {
+      "name": "02-competitive-case-studies.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_02-competitive-case-studies.md",
+      "size": 33522,
+      "source_type": "artifact"
+    },
+    {
+      "name": "01-market-landscape-report.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_01-market-landscape-report.md",
+      "size": 12635,
+      "source_type": "artifact"
+    },
+    {
+      "name": "sources.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_sources_1.md",
+      "size": 41327,
+      "source_type": "artifact"
+    },
+    {
+      "name": "regulatory-incentive-review.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_regulatory-incentive-review.md",
+      "size": 43968,
+      "source_type": "artifact"
+    },
+    {
+      "name": "onsite-solar-power.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_onsite-solar-power.md",
+      "size": 35663,
+      "source_type": "artifact"
+    },
+    {
+      "name": "green-building-systems.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_green-building-systems.md",
+      "size": 40474,
+      "source_type": "artifact"
+    },
+    {
+      "name": "financial-impact-modeling.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_financial-impact-modeling.md",
+      "size": 41722,
+      "source_type": "artifact"
+    },
+    {
+      "name": "fact-check-results.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_fact-check-results.md",
+      "size": 31045,
+      "source_type": "artifact"
+    },
+    {
+      "name": "electric-heavy-equipment.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_electric-heavy-equipment.md",
+      "size": 35670,
+      "source_type": "artifact"
+    },
+    {
+      "name": "opencode-session.json",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_opencode-session_2.json",
+      "size": 405126,
+      "source_type": "artifact"
+    },
+    {
+      "name": "technology-assessment.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_technology-assessment.md",
+      "size": 1809,
+      "source_type": "artifact"
+    },
+    {
+      "name": "research-report.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_research-report_1.md",
+      "size": 27541,
+      "source_type": "artifact"
+    },
+    {
+      "name": "regulatory-incentive-review.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_regulatory-incentive-review_1.md",
+      "size": 1415,
+      "source_type": "artifact"
+    },
+    {
+      "name": "financial-impact-modeling.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_financial-impact-modeling_1.md",
+      "size": 1334,
+      "source_type": "artifact"
+    },
+    {
+      "name": "README.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_README_2.md",
+      "size": 1793,
+      "source_type": "artifact"
+    },
+    {
+      "name": "opencode-session.json",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_opencode-session_3.json",
+      "size": 124201,
+      "source_type": "artifact"
+    },
+    {
+      "name": "technology-assessment-report.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_technology-assessment-report.md",
+      "size": 17579,
+      "source_type": "artifact"
+    },
+    {
+      "name": "regulatory-incentive-guide.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_regulatory-incentive-guide.md",
+      "size": 22524,
+      "source_type": "artifact"
+    },
+    {
+      "name": "financial-analysis-sections.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_financial-analysis-sections.md",
+      "size": 34762,
+      "source_type": "artifact"
+    },
+    {
+      "name": "README.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_README_3.md",
+      "size": 11885,
+      "source_type": "artifact"
+    },
+    {
+      "name": "opencode-session.json",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_opencode-session_4.json",
+      "size": 112616,
+      "source_type": "artifact"
+    },
+    {
+      "name": "renewable-energy-strategic-report.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_renewable-energy-strategic-report.md",
+      "size": 88381,
+      "source_type": "artifact"
+    },
+    {
+      "name": "DELIVERABLES.md",
+      "path": "/tmp/randi/hive/04f15ea4-d93f-4a46-af89-ba72ab771ff2/.sources/ref_DELIVERABLES.md",
+      "size": 7274,
+      "source_type": "artifact"
+    }
+  ],
+  "skipped": []
+}
